@@ -1,0 +1,9 @@
+node_modules/
+node_modules/.cache/
+.cache/
+.env
+.env.*
+src/assets/fonts/.DS_Store
+.DS_Store
+**/.DS_Store
+build
