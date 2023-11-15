@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "lib": ["es6"],
+    "module": "commonjs",
+    "rootDir": "src",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "outDir": "build",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "baseUrl": "./src/",
+    "paths":{ 
+      "@interfaces":["interfaces/index.ts"], 
+      "@configs":["configs/index.ts"],
+      "@controllers":["controllers/index.ts"],
+      "@models":["models/index.ts"],
+      "@routes":["routes/index.ts"]
+    }
+  }
+}

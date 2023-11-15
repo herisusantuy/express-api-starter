@@ -7,3 +7,4 @@ src/assets/fonts/.DS_Store
 .DS_Store
 **/.DS_Store
 build
+package-lock.json 
