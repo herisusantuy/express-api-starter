@@ -1,7 +1,9 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model, ObjectId } from 'mongoose';
 import Joi, { ValidationError } from 'joi';
+import jwt from 'jsonwebtoken';
+import _ from 'lodash';
 
-import { IUser } from '../interfaces';
+import { IUser } from '@interfaces';
 
 const userSchema = new Schema<IUser>({
   username: {
@@ -21,25 +23,41 @@ const userSchema = new Schema<IUser>({
     max: 1024,
     min: 5
   },
+  isAdmin: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
 
+userSchema.methods.generateToken = function () {
+  const token = jwt.sign({ _id: this._id }, process.env.JWT_KEY as string);
+  return token;
+};
+
 const userValidationSchema = Joi.object({
   username: Joi.string().required().trim(),
   email: Joi.string().email().required().trim(),
-  password: Joi.string().required().min(5).max(10)
+  password: Joi.string().required().min(5),
+  isAdmin: Joi.boolean(),
+  createdAt: Joi.date()
 });
 
-userSchema.pre('save', async (next): Promise<void> => {
+userSchema.pre('save', async function (next) {
   try {
-    await userValidationSchema.validateAsync(this);
+    if (Object.keys(this.toObject()).length === 0) {
+      throw new Error('Request body is empty!');
+    }
+    const newUser = _.omit(this.toObject(), ['_id']);
+    await userValidationSchema.validateAsync(newUser);
     next();
   } catch (error) {
     if (error instanceof ValidationError) {
-      next(new Error(error.message));
+      const err = new Error(error.details.map(d => d.message).toString());
+      next(err);
     } else {
       const err = new Error('Something went wrong!');
       next(err);
@@ -48,5 +66,7 @@ userSchema.pre('save', async (next): Promise<void> => {
 });
 
 const User = model<IUser>('User', userSchema);
+
+const user = new User();
 
 export default User;

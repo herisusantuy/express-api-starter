@@ -13,12 +13,14 @@
     "noImplicitAny": true,
     "skipLibCheck": true,
     "baseUrl": "./src/",
-    "paths":{ 
-      "@interfaces":["interfaces/index.ts"], 
-      "@configs":["configs/index.ts"],
-      "@controllers":["controllers/index.ts"],
-      "@models":["models/index.ts"],
-      "@routes":["routes/index.ts"]
+    "paths": {
+      "@interfaces": ["interfaces/index.ts"],
+      "@configs": ["configs/index.ts"],
+      "@controllers": ["controllers/index.ts"],
+      "@models": ["models/index.ts"],
+      "@routes": ["routes/index.ts"],
+      "@middlewares": ["middlewares/index.ts"],
+      "@validations": ["utils/validations/index.ts"]
     }
   }
 }

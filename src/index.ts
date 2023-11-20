@@ -4,15 +4,15 @@ import path from 'path';
 import cors from 'cors';
 import morgan from 'morgan';
 
+import { Database } from '@configs';
+import { router } from '@routes';
+
 const envUrl = process.env.NODE_ENV
   ? path.resolve(__dirname, `../.env.${process.env.NODE_ENV}`)
   : path.resolve(__dirname, `../.env`);
 dotenv.config({
   path: envUrl
 });
-
-import { Database } from './configs/index';
-import { router } from './routes/';
 
 const app = express();
 const PORT = process.env.PORT || 3000;

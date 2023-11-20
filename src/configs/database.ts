@@ -1,9 +1,16 @@
 import mongoose, { ConnectOptions } from 'mongoose';
 import dotenv from 'dotenv';
 
+const result = dotenv.config();
+if (result.error) {
+  throw result.error;
+}
+
 const dbUsername = process.env.DB_USERNAME;
 const dbPassword = process.env.DB_PASSWORD;
-const dbUrl = `mongodb+srv://${dbUsername}:${dbPassword}@portfolio-db.flctjrn.mongodb.net/?retryWrites=true&w=majority`;
+const dbName = process.env.DB_NAME;
+
+const dbUrl = `mongodb+srv://${dbUsername}:${dbPassword}@portfolio-db.flctjrn.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 class Database {
   private uri: string;
