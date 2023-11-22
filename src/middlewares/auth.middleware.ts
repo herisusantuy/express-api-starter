@@ -1,9 +1,11 @@
 import { IUser } from '@interfaces';
+import { User } from '@models';
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-export interface CustomRequest extends Request {
-  token: string | JwtPayload;
-}
+
+export type CustomRequest = Request & {
+  isAdmin?: boolean;
+};
 
 export const protect = async (
   req: Request,
@@ -11,29 +13,22 @@ export const protect = async (
   next: NextFunction
 ) => {
   let token: string = '';
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
-    token = req.headers.authorization.split(' ')[1];
+  if (req.headers.authorization) {
+    token = req.headers.authorization;
   }
   if (!token) {
-    return res.status(401).send('Access denied. No token provided!');
+    return res.status(401).send({
+      code: 401,
+      message: 'Access denied. No token provided!'
+    });
   }
   try {
-    const decoded = jwt.verify(token, process.env.JWT_KEY as string);
-    (req as CustomRequest).token = decoded;
+    const decoded: any = jwt.verify(token, process.env.JWT_KEY as string);
+    const user = await User.findById(decoded?._id);
+    (req as CustomRequest).isAdmin = user!.isAdmin;
     next();
   } catch (error) {
-    res.status(400).send('Invalid token!');
+    console.log('error:', error);
+    next(new Error('Unauthorized to access route!'));
   }
-};
-
-export const authorize = (user: IUser) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    if (!user.isAdmin) {
-      return next(new Error('Not authorize!'));
-    }
-    next();
-  };
-};
+}; 

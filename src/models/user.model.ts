@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, ObjectId } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 import Joi, { ValidationError } from 'joi';
 import jwt from 'jsonwebtoken';
 import _ from 'lodash';
@@ -65,8 +65,6 @@ userSchema.pre('save', async function (next) {
   }
 });
 
-const User = model<IUser>('User', userSchema);
-
-const user = new User();
+const User = model<IUser>('User', userSchema); 
 
 export default User;
